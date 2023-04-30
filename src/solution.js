@@ -1,14 +1,5 @@
 const findLongestCommonSubsequence = (text1, text2) => {
 
-    if (text1.length === 0 || text2.length === 0)
-        throw new Error("Strings length have to be more than 0");
-    if (text1.length > 1000 || text2.length > 1000)
-        throw new Error("Strings length have to be less than 1001");
-
-    if (!(/^[a-z]+$/.test(text1) && /^[a-z]+$/.test(text2))) {
-        throw new Error("Invalid character");
-    }
-
     const tabu = initTabu(text1, text2);
     search(text1, text2, tabu);
     return tabu[0][0];
