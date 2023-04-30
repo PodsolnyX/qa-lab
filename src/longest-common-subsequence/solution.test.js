@@ -1,26 +1,19 @@
 const findLongestCommonSubsequence = require("./solution");
 const each = require("jest-each").default;
 
+//-------------------------------------------ПограничныеТесты---------------------------------------------------------//
+
+//Пустые строки выдают ошибку
 describe("longestSub_StringLenEqual0ExceedsLeftLimit_ReturnException", () => {
     each([
         ["", "aaa"],
-        ["aaa", ""]
+        ["aaa", ""],
+        ["", ""],
     ]).it('Test:%#_StringLenEqual0ExceedsLeftLimit', (string1, string2) => {
-        expect(findLongestCommonSubsequence(string1, string2)).toThrow();
+        expect(() => {findLongestCommonSubsequence(string1, string2)}).toThrow("Strings length have to be more than 0");
     });
 })
-
-describe("longestSub_StringLenEqual1000ExceedsRightLimit_ReturnException", () => {
-    each([
-        ["a".repeat(1000), "aaa"],
-        ["aaa", "b".repeat(1000),],
-        ["v".repeat(1000), "b".repeat(1000),],
-        ["ca".repeat(500), "aaa"],
-    ]).it('Test:%#_StringLenEqual1000ExceedsRightLimit', (string1, string2) => {
-        expect(findLongestCommonSubsequence(string1, string2)).toThrow();
-    });
-})
-
+//Строки длиной более 1000 выдают ошибку
 describe("longestSub_StringLenEqual1001ExceedsRightLimit_ReturnException", () => {
     each([
         ["a".repeat(1001), "aaa"],
@@ -28,11 +21,20 @@ describe("longestSub_StringLenEqual1001ExceedsRightLimit_ReturnException", () =>
         ["v".repeat(1001), "a".repeat(1001)],
         ["c".repeat(1001), "aaa"],
     ]).it('Test:%#_StringLenEqual1001ExceedsRightLimit', (string1, string2) => {
-        expect(findLongestCommonSubsequence(string1, string2)).toThrow();
+        expect(() => {findLongestCommonSubsequence(string1, string2)}).toThrow("Strings length have to be less than 1001");
     });
 })
-
-describe("longestSub_StringLenEqual999NotExceedsRightLimit", () => {
+//Строки длиной 1 НЕ выдают ошибку
+describe("longestSub_StringLenEqual1NotExceedsLeftLimit_NotReturnException", () => {
+    each([
+        ["d", "deffefeegeg", 1],
+        ["dedgeegge", "d", 1]
+    ]).it('Test:%#_StringLenEqual1NotExceedsLeftLimit', (string1, string2, expected) => {
+        expect(findLongestCommonSubsequence(string1, string2)).toBe(expected);
+    });
+})
+//Строки длиной 999 НЕ выдают ошибку
+describe("longestSub_StringLenEqual999NotExceedsRightLimit_NotReturnException", () => {
     each([
         ["a".repeat(999), "defa", 1],
         ["a".repeat(999), "a".repeat(999), 999],
@@ -41,56 +43,73 @@ describe("longestSub_StringLenEqual999NotExceedsRightLimit", () => {
         expect(findLongestCommonSubsequence(string1, string2)).toBe(expected);
     });
 })
-
-describe("longestSub_StringLenEqual1NotExceedsLeftLimit", () => {
+//Строки длиной 1000 НЕ выдают ошибку
+describe("longestSub_StringLenEqual1000NotExceedsRightLimit_NotReturnException", () => {
     each([
-        ["d", "deffefeegeg", 1],
-        ["dedgeegge", "d", 1]
-    ]).it('Test:%#_StringLenEqual1NotExceedsLeftLimit', (string1, string2, expected) => {
+        ["a".repeat(1000), "aaa", 3],
+        ["aba", "b".repeat(1000), 1],
+        ["vb".repeat(500), "b".repeat(1000), 500],
+        ["ca".repeat(500), "aaa", 3],
+    ]).it('Test:%#_StringLenEqual1000ExceedsRightLimit', (string1, string2, expected) => {
         expect(findLongestCommonSubsequence(string1, string2)).toBe(expected);
     });
 })
 
+//-----------------------------------------ТестыНаВходящиеСимволы-----------------------------------------------------//
+
+//Строки, включающие числа, выдают ошибку
 describe("longestSub_StringIncludesNumbers_ReturnException", () => {
     each([
         ["11156ggr46646", "aaa"],
         ["aaa", "1f144441"],
         ["a437737aa", "1f1444344441"],
         ["a437737aa", "1"],
-    ]).it('Test:%#_StringIncludesNumbers', (title, string1, string2) => {
-        expect(findLongestCommonSubsequence(string1, string2)).toThrow();
+    ]).it('Test:%#_StringIncludesNumbers', (string1, string2) => {
+        expect(() => {findLongestCommonSubsequence(string1, string2)}).toThrow("Invalid character");
     });
 })
-
+//Строки, включающие кириллицу, выдают ошибку
 describe("longestSub_StringIncludesCyrillic_ReturnException", () => {
     each([
         ["жжкпкvvvж", "vvv"],
         ["vvv", "жжddddж"],
         ["vдвоьаугашугvv", "жжddddж"],
-    ]).it('Test:%#_StringIncludesCyrillic', (title, string1, string2) => {
-        expect(findLongestCommonSubsequence(string1, string2)).toThrow();
+    ]).it('Test:%#_StringIncludesCyrillic', (string1, string2) => {
+        expect(() => {findLongestCommonSubsequence(string1, string2)}).toThrow("Invalid character");
     });
 })
+//Строки, включающие спец символы, выдают ошибку
 describe("longestSub_StringIncludesSpecialCharacters_ReturnException", () => {
     each([
         ["#fefeg##", "vvv"],
         ["vvv", "$eeff$$"],
         ["vv####v", "$eeff$$"],
-    ]).it('Test:%#_StringIncludesSpecialCharacters', (title, string1, string2) => {
-        expect(findLongestCommonSubsequence(string1, string2)).toThrow();
+    ]).it('Test:%#_StringIncludesSpecialCharacters', (string1, string2) => {
+        expect(() => {findLongestCommonSubsequence(string1, string2)}).toThrow("Invalid character");
     });
 })
+//Строки, включающие пробелы, выдают ошибку
+describe("longestSub_StringIncludesSpacesCharacters_ReturnException", () => {
+    each([
+        ["njfenjf nef", "vvv"],
+        ["vvv", "efewnifuhwyfwbfwef wbfyewfuwhfuwenfuw"],
+        ["fuefhunfbeu enhebrubgeg", "jehfbher ebfyeufehfue"],
+    ]).it('Test:%#_StringIncludesSpacesCharacters', (string1, string2) => {
+        expect(() => {findLongestCommonSubsequence(string1, string2)}).toThrow("Invalid character");
+    });
+})
+//Строки, включающие латиницу в верхнем регистре, выдают ошибку
 describe("longestSub_StringIncludesUppercaseEnglishCharacters_ReturnException", () => {
     each([
         ["AAfffA", "aaa"],
         ["vvv", "LOaaL"],
         ["VVV", "LOaaL"],
     ]).it('Test:%#_StringIncludesUppercaseEnglishCharacters', (string1, string2) => {
-        expect(findLongestCommonSubsequence(string1, string2)).toThrow();
+        expect(() => {findLongestCommonSubsequence(string1, string2)}).toThrow("Invalid character");
     });
 })
-
-describe("longestSub_StringIncludesLowercaseEnglishCharacters", () => {
+//Строки, включающие латиницу в нижнем регистре, НЕ выдают ошибку
+describe("longestSub_StringIncludesLowercaseEnglishCharacters_NotReturnException", () => {
     each([
         ["aaa", "aaefefea", 3],
         ["vththtthvv", "vvv", 3],
@@ -99,6 +118,9 @@ describe("longestSub_StringIncludesLowercaseEnglishCharacters", () => {
     });
 })
 
+//------------------------------------ТестыКорректностиОтветаВСпецСлучаях---------------------------------------------//
+
+//Строка, являющиеся максимальной общей подпоследовательностью, возвращает длину этой строки
 describe("longestSub_StringEqualCommonSub_ReturnStringLen", () => {
     each([
         ["ace", "abcde", 3],
@@ -107,7 +129,7 @@ describe("longestSub_StringEqualCommonSub_ReturnStringLen", () => {
         expect(findLongestCommonSubsequence(string1, string2)).toBe(expected);
     });
 })
-
+//Строка, являющиеся максимальной общей подпоследовательностью, длиной один возвращает один
 describe("longestSub_StringIsSingleCharacterAndEqualCommonSub_ReturnOne", () => {
     each([
         ["a", "aaaa", 1],
@@ -117,7 +139,7 @@ describe("longestSub_StringIsSingleCharacterAndEqualCommonSub_ReturnOne", () => 
         expect(findLongestCommonSubsequence(string1, string2)).toBe(expected);
     });
 })
-
+//Одинаковые строки возвращают длину этих строк
 describe("longestSub_IdenticalStrings_ReturnStringsLen", () => {
     each([
         ["abc", "abc", 3],
@@ -126,7 +148,7 @@ describe("longestSub_IdenticalStrings_ReturnStringsLen", () => {
         expect(findLongestCommonSubsequence(string1, string2)).toBe(expected);
     });
 })
-
+//При отсутствии общей подпоследовательностью возвращается ноль
 describe("longestSub_NoSuchSubsequence_ReturnZero", () => {
     each([
         ["abc", "def", 0],
@@ -136,7 +158,10 @@ describe("longestSub_NoSuchSubsequence_ReturnZero", () => {
     });
 })
 
-describe("longestSub_NormalTestWithShortStrings", () => {
+//---------------------------------ТестыКорректностиОтветаВОбычныхСлучаях---------------------------------------------//
+
+//При коротких строках возвращается корректный ответ
+describe("longestSub_NormalTestWithShortStrings_ReturnLongestComSubsequenceLen", () => {
     each([
         ["abcegew", "gegeheje", 3],
         ["egwwnntn", "keineinffffemcune", 4],
@@ -146,24 +171,24 @@ describe("longestSub_NormalTestWithShortStrings", () => {
         expect(findLongestCommonSubsequence(string1, string2)).toBe(expected);
     });
 })
-
-describe("longestSub_NormalTestWithLongStrings", () => {
+//При длинных строках возвращается корректный ответ
+describe("longestSub_NormalTestWithLongStrings_ReturnLongestComSubsequenceLen", () => {
     each([
-        ["aneyvbceuybecenuyejbcuckebcyubjecbeyc", "mcuyebcyucetyvevbcnwnubcwucebbcuwbce", 20],
-        ["ncybehcjeecuygeuwnjmicnweubcnewncwnce", "wockiwemcmybetvwiwjkocmewiunyubgucwebcwc", 17],
-        ["wcneyuctywevcbniucwnunceuwbnewuicjwicmncwe", "aaanvcjhegcuwicnuyvcetcwehcjwecihewc", 17],
-        ["knvhbvuhrriubvyubnvbwucbwcew", "poppoporjvrbvbrcwcwenywervrtbrtwcwcerrevecefe", 13],
+        ["aneyvbceuybecenuyejbcuckjenncebcheciwcnwicwncjencnjewckjweucencwjkneckwncewncwjcekebcyubjecbeyc", "mcuyebcyucetyncuewbcvcubemicwbcuwecinwcnncbwecyuwbcnwcevevbcnwnubcwucebbcuwbce", 46],
+        ["ncybehcjeecuygeuwnjmicnweubcqbxeiocmbyueioicemverruieovmneiocmwicwecnwemcowcewmnewncwnce", "wockiwemcmybetvwiwjbewieocmrbeoeepvvneburbcevetcecywbcwecnwcekocmewiunyubgucwebcwc", 42],
+        ["wcneyuctywevcbniucwnunceuwbnewuicjehuevbbneurenveiowcmmerjomcngqqqhcbeucwicmncwe", "aaanvcjhegcunceyweuicmwcneuwucbwncwnecnwecnnmciwhvwyecwwicnuyvcetcwehcjwecihewc", 34],
+        ["knvhbvuhreincncbhnvfhvruncnneucewcnwncewncwycwecnwkdjndjbvhuencnwuegynnvwnriubvyubnvbwucbwcew", "poppoporjvrbvbrcwcwenynecuwbucuwencncbvhbvbeicnbhvknxuceygwoutytytybgwvcywwervrtbrtwcwcerrevecefe", 39],
     ]).it('Test:%#_NormalTestWithLongStrings', (string1, string2, expected) => {
         expect(findLongestCommonSubsequence(string1, string2)).toBe(expected);
     });
 })
-
-describe("longestSub_NormalTestWithLongAndShortStrings", () => {
+//При длинных и коротких строках возвращается корректный ответ
+describe("longestSub_NormalTestWithLongAndShortStrings_ReturnLongestComSubsequenceLen", () => {
     each([
-        ["abcveveevwvwevewevvwevwbeebebbeeqcbt", "deffff", 1],
-        ["abcec", "dejnjencebvjcebycebeyvcebcef", 4],
-        ["abmnrhbyuebhrnubnreccecubyguebc", "mbjvnbugrbv", 7],
-        ["btyeer", "einvybnvuygruneuinvbyubrvybrriv", 4],
+        ["abcveveevwvwevewevvwevwncejhbcuwbndbfvhnkowucnmwvnyrcmwnvryveivjimeveuirnvunryehnjvmeinvueruvbvbeebebbeeqcbt", "deffff", 2],
+        ["abcec", "dejnjencebvvriuvnrnvcnvcmnvjjffievnnvcmcnvirenivmcnvjrieuvccmnjcebycebeyvcebcef", 4],
+        ["abmnrhincverwormmvmvrevirenvjchvgcbvcbcbcbbcbcbbjhgcvevbehbrhvvjehjbvhebchbvjvjecnwncebyuebhrnubnreccecubyguebc", "mbjvnbugrbv", 9],
+        ["btyeer", "einvybnvuygrbcegwcuwebcxnvncmriuiyrbvnevncvfhvfvnncncbvbjfnfvjkdnkfjvnknjdkfuneuinvbyubrvybrriv", 5],
     ]).it('Test:%#_NormalTestWithLongAndShortStrings', (string1, string2, expected) => {
         expect(findLongestCommonSubsequence(string1, string2)).toBe(expected);
     });
