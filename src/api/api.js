@@ -25,10 +25,12 @@ app.get('/main', (req, res) => {
 
     const result = findLongestCommonSubsequence(str1, str2);
 
-    res.json({ lcs: result });
+    res.json({ result });
 });
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
+module.exports = app;
 
