@@ -1,7 +1,9 @@
 const requestFindLongestComSub = require("./requestFindComSub");
 const each = require("jest-each").default;
 
+//Тесты статус кода запроса
 describe("longestSub_StatusCodeAPIRequest", () => {
+    //При корректных данных возвращается статус-код 200
     describe("WithCorrectData_Return200", () => {
         each([
             ["abcegew", "gegeheje"],
@@ -13,7 +15,7 @@ describe("longestSub_StatusCodeAPIRequest", () => {
             expect(res.statusCode).toEqual(200)
         });
     })
-
+    //При некорректных данных возвращается статус-код 400
     describe("WithIncorrectData_Return400", () => {
         each([
             ["abce111gew", "gegeheje"],
@@ -27,7 +29,7 @@ describe("longestSub_StatusCodeAPIRequest", () => {
             expect(res.statusCode).toEqual(400)
         });
     })
-
+    //При корректном методе возвращается статус-код 200
     describe("WithCorrectMethod_Return200", () => {
         each([
             ["abcegew", "gegeheje"],
@@ -39,7 +41,7 @@ describe("longestSub_StatusCodeAPIRequest", () => {
             expect(res.statusCode).toEqual(200);
         });
     })
-
+    //При некорректном методе возвращается статус-код 404
     describe("WithIncorrectMethod_Return404", () => {
         each([
             ["abcegew", "gegeheje"],
@@ -53,7 +55,9 @@ describe("longestSub_StatusCodeAPIRequest", () => {
     })
 })
 
+//Тесты тела запроса
 describe("longestSub_BodyAPIRequest", () => {
+    //При корректных данных в теле запроса есть результат
     describe("WithCorrectData_ReturnResult", () => {
         each([
             ["abcegew", "gegeheje"],
@@ -65,7 +69,7 @@ describe("longestSub_BodyAPIRequest", () => {
             expect(!!res.body.result).toEqual(true)
         });
     })
-
+    //При некорректных данных в теле запроса нет результата
     describe("WithIncorrectData_ReturnResult", () => {
         each([
             ["abce44gew", "gegeheje"],
@@ -79,7 +83,9 @@ describe("longestSub_BodyAPIRequest", () => {
     })
 })
 
+//Тесты результата в теле запроса
 describe("longestSub_ResultAPIRequest", () => {
+    //При запросе с одинаковыми строками в результате тела запроса возвращается их длина
     describe("WhenIdenticalStrings_ReturnStringsLen", () => {
         each([
             ["abc", "abc", 3],
@@ -89,7 +95,7 @@ describe("longestSub_ResultAPIRequest", () => {
             expect(res.body.result).toEqual(expected)
         });
     })
-
+    //При запросе с строками без общей подпоследовательности в результате тела запроса возвращается ноль
     describe("WhenNoSuchSubsequence_ReturnZero", () => {
         each([
             ["abc", "def", 0],
@@ -99,7 +105,7 @@ describe("longestSub_ResultAPIRequest", () => {
             expect(res.body.result).toEqual(expected)
         });
     })
-
+    //При запросе с длинными строками в результате тела запроса возвращается корректная длина общей подпоследовательности
     describe("WhenLongStrings_ReturnLongestComSubsequenceLen", () => {
         each([
             ["aneyvbceuybecenuyejbcuckjenncebcheciwcnwicwncjencnjewckjweucencwjkneckwncewncwjcekebcyubjecbeyc", "mcuyebcyucetyncuewbcvcubemicwbcuwecinwcnncbwecyuwbcnwcevevbcnwnubcwucebbcuwbce", 46],
