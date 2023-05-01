@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const findLongestCommonSubsequence = require("./solution");
 const app = express();
@@ -6,6 +7,7 @@ const port = 5000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors());
 
 app.get('/main', (req, res) => {
     const { str1, str2 } = req.query;
