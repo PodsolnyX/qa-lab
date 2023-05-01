@@ -18,7 +18,7 @@ function App() {
 
     return (
         <div className="App">
-            <h1 id={"label-result"}>Результат: {result}</h1>
+            <h1 id={"label-result"}>{result}</h1>
             <div>
                 <input id={"inputString1"} type={"text"} value={string1}
                        onChange={(event) => {setString1(event.target.value)}}/>
